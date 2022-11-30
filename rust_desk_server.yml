@@ -1,4 +1,5 @@
 # docker stack deploy -c ./rust_desk_server.yml rust_desk_server
+# doc https://github.com/rustdesk/rustdesk-server
 version: "3.4"
 
 services:
@@ -6,7 +7,6 @@ services:
     image: "rustdesk/rustdesk-server:latest"
     container_name: hbbs
     restart: always
-    command: hbbs -r example.com:21117
     ports:
       - 21115:21115
       - 21116:21116
@@ -14,6 +14,12 @@ services:
       - 21118:21118
     volumes:
       - "/data/rust_desk/hbbs:/root:rw"
+    environment:
+      ENCRYPTED_ONLY: "1"
+      KEY_PUB: "8BLLhtzUBU/XKAH4mep3p+IX4DSApe7qbAwNH9nv4yA="
+      KEY_PRIV: "egAVd44u33ZEUIDTtksGcHeVeAwywarEdHmf99KM5ajwEsuG3NQFT9coAfiZ6nen4hfgNICl7upsDA0f2e/jIA=="
+      RELAY: "rustdesk.example.com:21117"
+      DB_URL: "/db/db_v2.sqlite3"
     deploy:
       mode: replicated
       replicas: 1
