@@ -1,0 +1,41 @@
+# docker stack deploy -c ./rust_desk_server.yml rust_desk_server
+version: "3.4"
+
+services:
+  rust_desk_server_hbbs:
+    image: "rustdesk/rustdesk-server:latest"
+    container_name: hbbs
+    restart: always
+    command: hbbs -r example.com:21117
+    ports:
+      - 21115:21115
+      - 21116:21116
+      - 21116:21116/udp
+      - 21118:21118
+    volumes:
+      - "/data/rust_desk/hbbs:/root:rw"
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "2"
+          memory: 512M
+
+  rust_desk_server_hbbr:
+    image: "rustdesk/rustdesk-server:latest"
+    container_name: hbbr
+    restart: always
+    command: hbbr
+    ports:
+      - 21117:21117
+      - 21119:21119
+    volumes:
+      - "/data/rust_desk/hbbr:/root:rw"
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "2"
+          memory: 512M
